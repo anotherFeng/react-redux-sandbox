@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
-import BookList from '../containers/BookList';
+import SearchBar from '../containers/SearchBar';
+import WeatherList from '../containers/WeatherList';
 
 export default class App extends Component {
   render() {
     return (
       <div>
-        <BookList>React simple starter</BookList>
+        <SearchBar/>
+        <WeatherList/>
       </div>
     );
   }
