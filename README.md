@@ -1,2 +1,2 @@
-# redux-tinder
-A tinder clone using react and redux.  
+# react-redux-library
+A redux test app
