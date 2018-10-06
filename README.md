@@ -1,2 +1,2 @@
-# react-redux-library
-A redux test app
+# react-redux-sandbox
+another sandbox to hold some very old react example code.
