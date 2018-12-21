@@ -1,0 +1,11 @@
+version: '3'
+services:
+  client:
+    build:
+      dockerfile: Dockerfile.dev
+      context: ./react-bnb
+    ports:
+      - "3000:3000"
+    volumes:
+      - /app/node_modules
+      - ./react-bnb:/app
