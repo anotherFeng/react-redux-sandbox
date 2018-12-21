@@ -1,2 +1,2 @@
 # react-redux-sandbox
-another sandbox to hold some very old react example code.
+a sandbox to hold some react sample project/code.
