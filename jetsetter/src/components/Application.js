@@ -33,10 +33,29 @@ class Application extends Component {
     this.setState({ items: [item, ...this.state.items]});
   }
 
-  removeItem = (itemToRemove) => {
+  removeItem = (itemId) => {
     this.setState({
-      items: this.state.items.filter(item => item.id !== itemToRemove.id)
+      items: this.state.items.filter(item => item.id !== itemId)
     })
+  }
+
+  toggleItem = (itemId) => {
+    const items = this.state.items.map(item => {
+      if(item.id === itemId) {
+        return { ...item, packed: !item.packed };
+      }
+      return item;
+    })
+    this.setState({
+      items
+    })
+  }
+
+  markAllAsUnpacked = () => {
+    const items = this.state.items.map(item => {
+      return { ...item, packed: false };
+    });
+    this.setState({ items });
   }
 
   // How are we going to manipulate the state?
@@ -47,14 +66,13 @@ class Application extends Component {
     const { items } = this.state;
     const packedItems = [], unpackedItems = [];
     items.forEach((item) => item.packed ? packedItems.push(item) : unpackedItems.push(item));
-    console.log(packedItems, unpackedItems)
     return (
       <div className="Application">
         <NewItem onSubmit={this.addItem}/>
         <CountDown />
-        <Items title="Unpacked Items" items={unpackedItems} onRemove={this.removeItem}/>
-        <Items title="Packed Items" items={packedItems} onRemove={this.removeItem}/>
-        <button className="button full-width">Mark All As Unpacked</button>
+        <Items title="Unpacked Items" items={unpackedItems} onRemove={this.removeItem} onToggle={this.toggleItem}/>
+        <Items title="Packed Items" items={packedItems} onRemove={this.removeItem} onToggle={this.toggleItem}/>
+        <button className="button full-width" onClick={this.markAllAsUnpacked}>Mark All As Unpacked</button>
       </div>
     );
   }
