@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 
+import PizzaCalculatorStore from './PizzaCalculatorStore';
+import * as actions from './actions';
 import Title from './Title';
 import Input from './Input';
 import Result from './Result';
@@ -11,9 +13,11 @@ const initialState = {
   slicesPerPerson: 2,
 };
 
+  // Container.displayName = `WithPizzaCalculations(${ WrappedComponent.displayName || WrappedComponent.name })`;
+  // return Container;
 class PizzaCalculator extends Component {
+
   render() {
-    const { numberOfPeople, updateNumberOfPeople, slicesPerPerson, updateSlicesPerPerson, reset, numberOfPizzas } = this.props;
     return (
       <div className="Application">
         <Title />
@@ -40,23 +44,32 @@ class PizzaCalculator extends Component {
   }
 }
 
-const WithPizzaCalculation = WrappedComponent => class extends Component {
-  static displayName = `WithPizzaCalculations(${ WrappedComponent.displayName || WrappedComponent.name })`;
-  state = { ...initialState };
+const PizzaContainer = WithPizzaCalculation(PizzaCalculator);
+
+export default class Application extends Component {
+  state = PizzaCalculatorStore.getState();
+
+  componentDidMount() {
+    PizzaCalculatorStore.on('change', this.updateState);
+  }
+
+  componentWillUnmount() {
+    PizzaCalculatorStore.off('change', this.updateState);
+  }
 
   updateNumberOfPeople = event => {
     const numberOfPeople = parseInt(event.target.value, 10);
-    this.setState({ numberOfPeople });
+    actions.updateNumberOfPeople(numberOfPeople);
   };
 
   updateSlicesPerPerson = event => {
     const slicesPerPerson = parseInt(event.target.value, 10);
-    this.setState({ slicesPerPerson });
+    actions.updateSlicesPerPerson(slicesPerPerson);
   };
 
-  reset = event => {
-    this.setState({ ...initialState });
-  };
+  updateState() {
+    this.setState(PizzaCalculatorStore.getState());
+  }
 
   render() {
     const { numberOfPeople, slicesPerPerson } = this.state;
@@ -66,28 +79,12 @@ const WithPizzaCalculation = WrappedComponent => class extends Component {
     );
 
     return (
-      <WrappedComponent
-        numberOfPeople={numberOfPeople}
+      <PizzaCalculator
+        {...this.state}
         updateNumberOfPeople={this.updateNumberOfPeople}
-        slicesPerPerson={slicesPerPerson}
         updateSlicesPerPerson={this.updateSlicesPerPerson}
-        reset={this.reset}
-        numberOfPizzas={numberOfPizzas}
+        reset={actions.reset}
       />
     );
-  }
-}
-
-  // Container.displayName = `WithPizzaCalculations(${ WrappedComponent.displayName || WrappedComponent.name })`;
-  // return Container;
-
-
-const PizzaContainer = WithPizzaCalculation(PizzaCalculator);
-
-export default class Application extends Component {
-  render() {
-    return (
-      <PizzaContainer/>
-    )
   }
 }
