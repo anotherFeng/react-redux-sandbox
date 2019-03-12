@@ -19,7 +19,7 @@ class PizzaCalculatorStore extends EventEmitter {
       }
 
       if(action.type === 'UPDATE_SLICES_PER_PERSON') {
-        calculator.numberOfPeople = action.value;
+        calculator.slicesPerPerson = action.value;
         this.emit('change');
       }
 

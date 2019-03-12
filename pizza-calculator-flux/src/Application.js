@@ -8,16 +8,10 @@ import Result from './Result';
 
 import calculatePizzasNeeded from './lib/calculate-pizzas-needed';
 
-const initialState = {
-  numberOfPeople: 10,
-  slicesPerPerson: 2,
-};
-
-  // Container.displayName = `WithPizzaCalculations(${ WrappedComponent.displayName || WrappedComponent.name })`;
-  // return Container;
 class PizzaCalculator extends Component {
 
   render() {
+    const { numberOfPeople, numberOfPizzas, updateNumberOfPeople, updateSlicesPerPerson, slicesPerPerson, reset } = this.props; 
     return (
       <div className="Application">
         <Title />
@@ -44,18 +38,16 @@ class PizzaCalculator extends Component {
   }
 }
 
-const PizzaContainer = WithPizzaCalculation(PizzaCalculator);
-
 export default class Application extends Component {
   state = PizzaCalculatorStore.getState();
 
   componentDidMount() {
     PizzaCalculatorStore.on('change', this.updateState);
-  }
+  };
 
   componentWillUnmount() {
     PizzaCalculatorStore.off('change', this.updateState);
-  }
+  };
 
   updateNumberOfPeople = event => {
     const numberOfPeople = parseInt(event.target.value, 10);
@@ -67,9 +59,9 @@ export default class Application extends Component {
     actions.updateSlicesPerPerson(slicesPerPerson);
   };
 
-  updateState() {
+  updateState = () => {
     this.setState(PizzaCalculatorStore.getState());
-  }
+  };
 
   render() {
     const { numberOfPeople, slicesPerPerson } = this.state;
@@ -78,13 +70,15 @@ export default class Application extends Component {
       slicesPerPerson,
     );
 
+    console.log(this.state)
     return (
       <PizzaCalculator
         {...this.state}
+        numberOfPizzas={numberOfPizzas}
         updateNumberOfPeople={this.updateNumberOfPeople}
         updateSlicesPerPerson={this.updateSlicesPerPerson}
         reset={actions.reset}
       />
     );
-  }
-}
+  };
+};
