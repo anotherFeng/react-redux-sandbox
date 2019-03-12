@@ -9,28 +9,21 @@ import ItemStore from '../ItemStore';
 
 class Application extends Component {
   state = {
-    items: [],
+    items: ItemStore.getItems(),
   };
 
-  componentDidMount() {
+  updateItems = () => {
     this.setState({ items: ItemStore.getItems() });
   }
 
-  addItem = item => {
-    this.setState({ items: [item, ...this.state.items] });
-  };
+  componentDidMount() {
+    ItemStore.on('change', this.updateItems);
 
-  removeItem = item => {
-    this.setState({
-      items: this.state.items.filter(other => other.id !== item.id),
-    });
-  };
+  }
 
-  markAsPacked = item => {
-    const otherItems = this.state.items.filter(other => other.id !== item.id);
-    const updatedItem = { ...item, packed: !item.packed };
-    this.setState({ items: [updatedItem, ...otherItems] });
-  };
+  componentWillUnmount() {
+    ItemStore.off('change', this.updateItems);
+  }
 
   markAllAsUnpacked = () => {
     const items = this.state.items.map(item => ({ ...item, packed: false }));
@@ -44,19 +37,15 @@ class Application extends Component {
 
     return (
       <div className="Application">
-        <NewItem onSubmit={this.addItem} />
+        <NewItem/>
         <CountDown {...this.state} />
         <Items
           title="Unpacked Items"
           items={unpackedItems}
-          onCheckOff={this.markAsPacked}
-          onRemove={this.removeItem}
         />
         <Items
           title="Packed Items"
           items={packedItems}
-          onCheckOff={this.markAsPacked}
-          onRemove={this.removeItem}
         />
         <button className="button full-width" onClick={this.markAllAsUnpacked}>
           Mark All As Unpacked
