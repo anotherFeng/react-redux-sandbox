@@ -70,7 +70,6 @@ export default class Application extends Component {
       slicesPerPerson,
     );
 
-    console.log(this.state)
     return (
       <PizzaCalculator
         {...this.state}
